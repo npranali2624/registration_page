@@ -39,7 +39,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 const SizedBox(height: 8),
 
                 const Text(
-                  "Profile Photo",
+                  "Upload Photo",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -75,6 +75,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 6),
                         labelText: "Name",
+                        labelStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
                         prefixIcon: Icon(Icons.person),
                       ),
                     ),
@@ -93,6 +97,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(vertical: 6),
                           labelText: "Mobile Number",
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
                           prefixIcon: Icon(Icons.phone),
                           ),
                         ),
@@ -113,6 +121,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 6),
                         labelText: "Email",
+                        labelStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
                         prefixIcon: Icon(Icons.email),
                       ),
                     ),
@@ -130,6 +142,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 6),
                         labelText: "Password",
+                        labelStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
                         prefixIcon: Icon(Icons.lock),
 
                       ),
@@ -149,7 +165,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 6),
                         labelText: "Confirm Password",
-                        prefixIcon: Icon(Icons.lock_outline),
+                        labelStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        prefixIcon: Icon(Icons.lock),
 
                       ),
                     ),
@@ -178,7 +198,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                 ),
 
-                SizedBox(height: 12),
+                SizedBox(height: 30),
                 SizedBox(
                   width: double.infinity,
                   child:ElevatedButton(
@@ -234,7 +254,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 20),
                       backgroundColor: Color(0xFFBE0108),
                     ),
                     child: const Text(
@@ -244,7 +264,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+
               ],
             ),
           ),
