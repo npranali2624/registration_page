@@ -94,7 +94,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           contentPadding: EdgeInsets.symmetric(vertical: 6),
                           labelText: "Mobile Number",
                           prefixIcon: Icon(Icons.phone),
-
                           ),
                         ),
                       ),
