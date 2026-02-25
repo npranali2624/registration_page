@@ -15,6 +15,14 @@ class _OtpScreenState extends State<OtpScreen> {
   final List<TextEditingController> otpControllers =
   List.generate(6, (index) => TextEditingController());
 
+  @override
+  void dispose() {
+    for (var controller in otpControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   void verifyOtp() {
     String otp = otpControllers.map((c) => c.text).join();
 
@@ -33,7 +41,7 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
       );
 
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const LoginPage(),
@@ -65,6 +73,9 @@ class _OtpScreenState extends State<OtpScreen> {
           if (value.isNotEmpty && index < 5) {
             FocusScope.of(context).nextFocus();
           }
+          if (value.isEmpty && index > 0) {
+            FocusScope.of(context).previousFocus();
+          }
         },
       ),
     );
@@ -74,6 +85,19 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F6FA),
+
+      // ✅ BACK BUTTON
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -81,7 +105,6 @@ class _OtpScreenState extends State<OtpScreen> {
             child: Column(
               children: [
 
-                // 🔵 Circle Icon
                 Container(
                   height: 120,
                   width: 120,
@@ -124,7 +147,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
                 const SizedBox(height: 30),
 
-                // 🔢 OTP Boxes
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(6, (index) => otpBox(index)),
@@ -132,7 +154,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
                 const SizedBox(height: 20),
 
-                // 🔁 Resend OTP
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -143,9 +164,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     GestureDetector(
                       onTap: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("OTP Resent"),
-                          ),
+                          const SnackBar(content: Text("OTP Resent")),
                         );
                       },
                       child: const Text(
@@ -161,13 +180,12 @@ class _OtpScreenState extends State<OtpScreen> {
 
                 const SizedBox(height: 30),
 
-                // 🔵 Verify Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: const Color(0xFFBE0108),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget
-{
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
-{
+class _LoginPageState extends State<LoginPage> {
   String selectedRole = "";
   bool forgotClicked = false;
   final TextEditingController _mobileController = TextEditingController();
@@ -16,51 +15,43 @@ class _LoginPageState extends State<LoginPage>
   String? _mobileError;
   String? _passwordError;
 
-  void _validateFields()
-  {
-    setState(()
-    {
+  void _validateFields() {
+    setState(() {
       _mobileError = null;
       _passwordError = null;
       String mobile = _mobileController.text.trim();
       String password = _passwordController.text.trim();
 
-      if (mobile.isEmpty)
-      {
+      if (mobile.isEmpty) {
         _mobileError = "Mobile number is required.";
-      }
-      else if (mobile.length != 10 || !RegExp(r'^[0-9]+$').hasMatch(mobile))
-      {
+      } else if (mobile.length != 10 ||
+          !RegExp(r'^[0-9]+$').hasMatch(mobile)) {
         _mobileError = "Please enter a valid 10-digit mobile number.";
       }
 
-      if (password.isEmpty)
-      {
+      if (password.isEmpty) {
         _passwordError = "Password is required.";
-      }
-      else if (password.length < 8)
-      {
+      } else if (password.length < 8) {
         _passwordError = "Password must be at least 8 characters long.";
-      }
-      else if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$')
-          .hasMatch(password))
-      {
+      } else if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$')
+          .hasMatch(password)) {
         _passwordError =
         "Password must include letters, numbers, and a special symbol.";
       }
-    }
-    );
+    });
 
-    if (_mobileError == null && _passwordError == null)
-    {
+    if (_mobileError == null && _passwordError == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login successful!"), backgroundColor: Colors.green,),);
+        const SnackBar(
+          content: Text("Login successful!"),
+          backgroundColor: Colors.green,
+        ),
+      );
     }
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
@@ -70,20 +61,52 @@ class _LoginPageState extends State<LoginPage>
             height: double.infinity,
             fit: BoxFit.cover,
           ),
+          Positioned(
+            top: 50,
+            left: 20,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+
           Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+              padding:
+              const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
                     "LOGIN",
-                    style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white,
-                      letterSpacing: 2,),),
+                    style: TextStyle(
+                      fontSize: 38,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 2,
+                    ),
+                  ),
                   const SizedBox(height: 35),
                   _buildTextField(
-                    controller: _mobileController, hint: "Mobile Number", icon: Icons.phone,
-                    obscure: false, errorText: _mobileError,),
+                    controller: _mobileController,
+                    hint: "Mobile Number",
+                    icon: Icons.phone,
+                    obscure: false,
+                    errorText: _mobileError,
+                  ),
                   const SizedBox(height: 20),
                   _buildTextField(
                     controller: _passwordController,
@@ -106,7 +129,8 @@ class _LoginPageState extends State<LoginPage>
                         const SizedBox(width: 10),
                         Expanded(
                           child: DropdownButton<String>(
-                            value: selectedRole.isEmpty ? null : selectedRole,
+                            value:
+                            selectedRole.isEmpty ? null : selectedRole,
                             isExpanded: true,
                             underline: const SizedBox(),
                             hint: const Text(

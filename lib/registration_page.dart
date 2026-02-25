@@ -3,16 +3,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'otp_screen.dart';
 import 'login_page.dart';
 
+
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
 }
+
 class _RegistrationPageState extends State<RegistrationPage> {
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+
+  String? _mobileError;
+  String? _passwordError;
+  String? _confirmPasswordError;
+  String? _locationError;
 
   final nameController = TextEditingController();
   final mobileController = TextEditingController();
@@ -21,6 +28,48 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final confirmPasswordController = TextEditingController();
   final locationController = TextEditingController();
 
+  void _validateRegistration() {
+    setState(() {
+      _mobileError = null;
+      _passwordError = null;
+      _confirmPasswordError = null;
+      _locationError = null;
+
+      String mobile = mobileController.text.trim();
+      String password = passwordController.text.trim();
+      String confirmPassword = confirmPasswordController.text.trim();
+      String location = locationController.text.trim();
+
+      if (mobile.isEmpty) {
+        _mobileError = "Mobile number is required.";
+      } else if (mobile.length != 10 ||
+          !RegExp(r'^[0-9]+$').hasMatch(mobile)) {
+        _mobileError = "Enter valid 10-digit mobile number.";
+      }
+
+      if (password.isEmpty) {
+        _passwordError = "Password is required.";
+      } else if (password.length < 8) {
+        _passwordError = "Password must be at least 8 characters.";
+      } else if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).+$')
+          .hasMatch(password)) {
+        _passwordError =
+        "Password must include letter, number & special symbol.";
+      }
+
+      if (confirmPassword.isEmpty) {
+        _confirmPasswordError = "Confirm your password.";
+      } else if (confirmPassword != password) {
+        _confirmPasswordError = "Passwords do not match.";
+      }
+
+      if (location.isEmpty) {
+        _locationError = "Location is required.";
+      } else if (!RegExp(r'^[A-Z]').hasMatch(location)) {
+        _locationError = "Location must start with capital letter.";
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context){
@@ -33,157 +82,105 @@ class _RegistrationPageState extends State<RegistrationPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child:  SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child:Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+
                 const SizedBox(height: 8),
 
                 const Text(
-                  "Register Here",
+                  "Registration ",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
+
                 const SizedBox(height: 8),
+
                 Center(
                   child: Container(
                     padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                    decoration: const BoxDecoration(color: Colors.white,
                       shape: BoxShape.circle,
                     ),
                     child: const CircleAvatar(
                       radius: 35,
-                      backgroundImage: AssetImage("assets/images/profile.png"),
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: Colors.blue,
+                      child: Icon(
+                        Icons.person,
+                        size: 40,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 18),
+                const SizedBox(height: 18),
 
                 TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
                     hintText: "Name",
-                    prefixIcon: Icon(Icons.person, color: Colors.black87),
-
+                    prefixIcon: const Icon(Icons.person, color: Color(0xFF0F5272)),
                     filled: true,
-                    fillColor: Color(0xFFEFEFEF),
-
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
-                    ),
-
-                    enabledBorder: OutlineInputBorder(
+                    fillColor: const Color(0xFFEFEFEF),
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                        width: 1.5,
-                      ),
-                    ),
-
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.blue.shade300,
-                        width: 2,
-                      ),
-                    ),
-
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.red,
-                        width: 1.5,
-                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: mobileController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     hintText: "Mobile Number",
-                    prefixIcon: Icon(Icons.phone, color: Colors.black87),
+                    prefixIcon: const Icon(Icons.phone, color: Color(0xFF0F5272)),
                     filled: true,
-                    fillColor: Color(0xFFEFEFEF),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
-                    ),
-                    enabledBorder: OutlineInputBorder(
+                    fillColor: const Color(0xFFEFEFEF),
+                    errorText: _mobileError,
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                        width: 1.5,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                        width: 2,
-                      ),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Colors.red,
-                        width: 1.5,
-                      ),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: "Email",
-                    prefixIcon: Icon(Icons.email, color: Colors.black87),
+                    prefixIcon: const Icon(Icons.email, color: Color(0xFF0F5272)),
                     filled: true,
-                    fillColor: Color(0xFFEFEFEF),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
-                    ),
-                    enabledBorder: OutlineInputBorder(
+                    fillColor: const Color(0xFFEFEFEF),
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
                     ),
                   ),
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: passwordController,
                   obscureText: !_isPasswordVisible,
-
-
                   decoration: InputDecoration(
                     hintText: "Password",
-                    prefixIcon: Icon(Icons.lock, color: Colors.black87),
-
+                    prefixIcon: const Icon(Icons.lock, color: Color(0xFF0F5272)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _isPasswordVisible
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                       onPressed: () {
                         setState(() {
@@ -191,36 +188,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         });
                       },
                     ),
-
                     filled: true,
-                    fillColor: Color(0xFFEFEFEF),
-
-                    enabledBorder: OutlineInputBorder(
+                    fillColor: const Color(0xFFEFEFEF),
+                    errorText: _passwordError,
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                    ),
-
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: confirmPasswordController,
                   obscureText: !_isConfirmPasswordVisible,
                   decoration: InputDecoration(
                     hintText: "Confirm Password",
-                    prefixIcon: Icon(Icons.lock, color: Colors.black87),
-
+                    prefixIcon: const Icon(Icons.lock, color: Color(0xFF0F5272)),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _isConfirmPasswordVisible
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                       onPressed: () {
                         setState(() {
@@ -229,175 +219,131 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         });
                       },
                     ),
-
                     filled: true,
-                    fillColor: Color(0xFFEFEFEF),
-
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
-                    ),
-
-                    enabledBorder: OutlineInputBorder(
+                    fillColor: const Color(0xFFEFEFEF),
+                    errorText: _confirmPasswordError,
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                    ),
-
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
                     ),
                   ),
                 ),
-                SizedBox(height: 16),
+
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: locationController,
                   decoration: InputDecoration(
                     hintText: "Location",
-                    prefixIcon: Icon(Icons.location_on, color: Colors.black87),
+                    prefixIcon: const Icon(Icons.location_on, color: Color(0xFF0F5272)),
                     filled: true,
-                    fillColor: Color(0xFFEFEFEF),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 16,
-                    ),
-                    enabledBorder: OutlineInputBorder(
+                    fillColor: const Color(0xFFEFEFEF),
+                    errorText: _locationError,
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
                     ),
                   ),
                 ),
-                SizedBox(height: 40),
+
+                const SizedBox(height: 40),
 
                 SizedBox(
                   width: 250,
-                  child:ElevatedButton(
+                  child: ElevatedButton(
                     onPressed: () async {
 
-                      if (nameController.text.isEmpty ||
-                          mobileController.text.isEmpty ||
-                          emailController.text.isEmpty ||
-                          passwordController.text.isEmpty ||
-                          confirmPasswordController.text.isEmpty ||
-                          locationController.text.isEmpty) {
+                      _validateRegistration();
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Please fill all fields")),
-                        );
+                      if (_mobileError != null ||
+                          _passwordError != null ||
+                          _confirmPasswordError != null ||
+                          _locationError != null) {
                         return;
                       }
 
-                      try {
-                        String phone = mobileController.text.trim();
+                      String phone = mobileController.text.trim();
 
-                        // 🔍 Check if user already exists
-                        var existingUser = await FirebaseFirestore.instance
-                            .collection('users')
-                            .where('mobile', isEqualTo: phone)
-                            .get();
+                      var existingUser = await FirebaseFirestore.instance
+                          .collection('users')
+                          .where('mobile', isEqualTo: phone)
+                          .get();
 
-                        if (existingUser.docs.isNotEmpty) {
-                          // ✅ User already registered → Go to Login Page
+                      if (existingUser.docs.isNotEmpty) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      } else {
+                        await FirebaseFirestore.instance.collection('users').add({
+                          'name': nameController.text.trim(),
+                          'mobile': phone,
+                          'email': emailController.text.trim(),
+                          'password': passwordController.text.trim(),
+                          'location': locationController.text.trim(),
+                          'role': "corporate",
+                          'createdAt': Timestamp.now(),
+                        });
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("User already registered. Please login.")),
-                          );
-
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OtpScreen(
+                              mobileNumber: phone,
                             ),
-                          );
-
-                        } else {
-                          // ✅ New user → Save & Go to OTP
-
-                          await FirebaseFirestore.instance.collection('users').add({
-                            'name': nameController.text.trim(),
-                            'mobile': phone,
-                            'email': emailController.text.trim(),
-                            'password': passwordController.text.trim(),
-                            'location': locationController.text.trim(),
-                            'role': "corporate",
-                            'createdAt': Timestamp.now(),
-                          });
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Registration Successful!")),
-                          );
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OtpScreen(
-                                mobileNumber: phone,
-                              ),
-                            ),
-                          );
-                        }
-
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Error: $e")),
+                          ),
                         );
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 20),
-                      backgroundColor: Color(0xFFBE0108),
+                      backgroundColor: const Color(0xFFBE0108),
                     ),
                     child: const Text(
                       "Register Now",
                       style: TextStyle(fontSize: 18, color: Colors.white),
-
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
 
-                Center(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        "Already have an account? ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16, // increased size
-                        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Already have an account? ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(
-                            color: Colors.yellow,
-                            fontSize: 18, // slightly bigger
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
                           ),
+                        );
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.yellow,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
-
       ),
-
     );
   }
 }
-
-
